@@ -1,5 +1,7 @@
 import 'package:chatgpt/constants/constants.dart';
+import 'package:chatgpt/services/services.dart';
 import 'package:chatgpt/widgets/chat_widget.dart';
+
 import 'package:flutter/material.dart';
 // import 'package:flutter/src/widgets/container.dart';
 // import 'package:flutter/src/widgets/framework.dart';
@@ -38,14 +40,15 @@ class _ChatScreenState extends State<ChatScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(AssetsManager.openaiLogo),
         ),
-        title: const Text('OpenAi Chat'),
+        title: const Text('Flutter OpenAi Chat'),
+        centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.more_vert_rounded,
-                color: Colors.white,
-              ))
+            onPressed: () async {
+              await Services.showmodelsheet(context: context);
+            },
+            icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+          ),
         ],
       ),
       body: SafeArea(
@@ -55,12 +58,17 @@ class _ChatScreenState extends State<ChatScreen> {
               child: ListView.builder(
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return const ChatWidget();
+                  return ChatWidget(
+                    msg: chatMessages[index]["msg"].toString(),
+                    chatIndex: int.parse(
+                      chatMessages[index]["chatIndex"].toString(),
+                    ),
+                  );
                 },
               ),
             ),
             if (_isTyping) ...[
-              const SpinKitThreeInOut(
+              const SpinKitThreeBounce(
                 color: Colors.purple,
                 size: 18,
               ),
